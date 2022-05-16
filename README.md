@@ -3,23 +3,23 @@ Projeto desenvolvido em Rust para obter o acorde resultante dadas suas notas.
 
 ## Utilização
 ```rust
-    let notes = vec![
-        Note::new(C, Normal),
-        Note::new(E, Normal),
-        Note::new(G, Normal),
-        Note::new(B, Flat),
-    ];
+let notes = vec![
+    Note::new(C, Normal),
+    Note::new(E, Normal),
+    Note::new(G, Normal),
+    Note::new(B, Flat),
+];
 
-    let chord = notes_to_chord(notes);
-    
-    println!("Chord: {}", chord);
+let chord = notes_to_chord(notes);
+
+println!("Chord: {}", chord);
 ```
 
 >  Chord: Cmaj7
 
 ---
 
-## Denvolvimento
+## Desenvolvimento
 Até o momento foram mapeados os seguintes acordes:
 
 
