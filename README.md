@@ -17,6 +17,8 @@ Projeto desenvolvido em Rust para obter o acorde resultante dadas suas notas.
 
 >  Chord: Cmaj7
 
+---
+
 ## Denvolvimento
 Até o momento foram mapeados os seguintes acordes:
 
