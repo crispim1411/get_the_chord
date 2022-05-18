@@ -1,22 +1,35 @@
-use std::collections::HashSet;
+use std::collections::HashMap;
 
 use crate::note::Accidental::*;
 use crate::note::Note;
 
-#[derive(Debug, Eq, PartialEq, Hash)]
+#[derive(PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum IntervalType {
     Major,
     Minor,
     Perfect,
 }
 
-#[derive(Debug, Eq, PartialEq, Hash)]
+#[derive(PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Interval {
     Tonic,
     Third(IntervalType),
     Fourth(IntervalType),
     Fifth(IntervalType),
     Seventh(IntervalType),
+}
+
+fn get_chord_shapes() -> HashMap<Vec<Interval>, String> {
+    use Interval::*;
+    use IntervalType::*;
+
+    vec![
+        (vec![Tonic, Third(Major), Fifth(Perfect)], "".to_string()),
+        (vec![Tonic, Third(Minor), Fifth(Perfect)], "m".to_string()),
+        (vec![Tonic, Third(Major), Fifth(Perfect), Seventh(Major)], "maj7".to_string()),
+        (vec![Tonic, Third(Minor), Fifth(Perfect), Seventh(Minor)], "m7".to_string()),
+        (vec![Tonic, Third(Major), Fifth(Perfect), Seventh(Minor)], "7".to_string()),
+    ].into_iter().collect()
 }
 
 pub struct Scale {
@@ -32,9 +45,9 @@ impl Scale {
         }
     }
 
-    pub fn get_intervals(&self, mut notes: Vec<Note>) -> HashSet<Interval> {
+    pub fn get_intervals(&self, mut notes: Vec<Note>) -> Vec<Interval> {
 
-        let mut intervals = HashSet::new();
+        let mut intervals = vec![];
 
         while let Some(mut note) = notes.pop() {
             if note.accidental == Flat {
@@ -51,33 +64,18 @@ impl Scale {
                 11 => Interval::Seventh(IntervalType::Major),
                 _ => panic!("{:?} not mapped", note)
             };
-            intervals.insert(interval);
+            intervals.push(interval);
         }
+        intervals.sort();
         intervals
     }
 
-    pub fn to_chord(&self, intervals: HashSet<Interval>) -> String {
-        use Interval::*;
-        use IntervalType::*;
+    pub fn to_chord(&self, intervals: Vec<Interval>) -> String {  
+        let chord_shapes = get_chord_shapes();
 
-        let mut chord_string = format!("{}", self.tone);
-        
-        let minor_triad: HashSet<Interval> = [Tonic, Third(Minor), Fifth(Perfect)].into_iter().collect();
-        let major_tetrad: HashSet<Interval> = [Tonic, Third(Major), Fifth(Perfect), Seventh(Major)].into_iter().collect();
-        let minor_tetrad: HashSet<Interval> = [Tonic, Third(Minor), Fifth(Perfect), Seventh(Minor)].into_iter().collect();
-        let dom_tetrad: HashSet<Interval> = [Tonic, Third(Major), Fifth(Perfect), Seventh(Minor)].into_iter().collect();
-        
-        if intervals == minor_triad {
-            chord_string.push_str("m");
-        } 
-        else if intervals == major_tetrad {
-            chord_string.push_str("maj7");
-        }
-        else if intervals == minor_tetrad {
-            chord_string.push_str("m7")
-        }
-        else if intervals == dom_tetrad {
-            chord_string.push_str("7")
+        let mut chord_string = self.tone.to_string();
+        if let Some(c) = chord_shapes.get(&intervals) {
+            chord_string.push_str(c);
         }
         else {
             println!("Chord not mapped");
