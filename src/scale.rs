@@ -41,8 +41,26 @@ impl Scale {
     pub fn new(note: Note) -> Self {
         Scale {
             tone: note.clone(), 
-            scale: Note::fill_scale(note) 
+            scale: Scale::fill_scale(note) 
         }
+    }
+
+    pub fn fill_scale(mut tonic: Note) -> Vec<Note> {
+        let mut scale = vec![];
+    
+        if tonic.accidental == Flat {
+            tonic = Note::get_sharp_eq(tonic);
+        }
+    
+        let mut note = tonic.clone();
+        loop {
+            scale.push(note.clone());
+            note = Note::get_next_note(note);
+            if note == tonic {
+                break;
+            }
+        }
+        scale
     }
 
     pub fn get_intervals(&self, mut notes: Vec<Note>) -> Vec<Interval> {
