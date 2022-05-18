@@ -72,7 +72,16 @@ impl Scale {
                 note = Note::get_sharp_eq(note.clone());
             }
         
-            let interval = match self.scale.iter().position(|i| i == &note).unwrap() {
+            let interval = self.map_to_interval(note);
+            intervals.push(interval);
+        }
+        intervals.sort();
+        intervals
+    }
+
+    fn map_to_interval(&self, note: Note) -> Interval {
+        if let Some(p) = self.scale.iter().position(|i| i == &note) {
+            match p {
                 0 => Interval::Tonic,
                 3 => Interval::Third(IntervalType::Minor),
                 4 => Interval::Third(IntervalType::Major),
@@ -81,11 +90,11 @@ impl Scale {
                 10 => Interval::Seventh(IntervalType::Minor),
                 11 => Interval::Seventh(IntervalType::Major),
                 _ => panic!("{:?} not mapped", note)
-            };
-            intervals.push(interval);
+            }
         }
-        intervals.sort();
-        intervals
+        else {
+            panic!("{:?} not on scale", note);
+        }
     }
 
     pub fn to_chord(&self, intervals: Vec<Interval>) -> String {  
