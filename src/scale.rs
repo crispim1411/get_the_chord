@@ -3,19 +3,22 @@ use std::collections::HashMap;
 use crate::note::Accidental::*;
 use crate::note::Note;
 
-#[derive(PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum IntervalType {
     Major,
     Minor,
     Perfect,
+    Augmented,
 }
 
-#[derive(PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Interval {
     Tonic,
+    Second(IntervalType),
     Third(IntervalType),
     Fourth(IntervalType),
     Fifth(IntervalType),
+    Sixth(IntervalType),
     Seventh(IntervalType),
 }
 
@@ -80,15 +83,22 @@ impl Scale {
     }
 
     fn map_to_interval(&self, note: Note) -> Interval {
+        use IntervalType::*;
+
         if let Some(p) = self.scale.iter().position(|i| i == &note) {
             match p {
                 0 => Interval::Tonic,
-                3 => Interval::Third(IntervalType::Minor),
-                4 => Interval::Third(IntervalType::Major),
-                5 => Interval::Fourth(IntervalType::Perfect),
-                7 => Interval::Fifth(IntervalType::Perfect),
-                10 => Interval::Seventh(IntervalType::Minor),
-                11 => Interval::Seventh(IntervalType::Major),
+                1 => Interval::Second(Minor),
+                2 => Interval::Second(Major),
+                3 => Interval::Third(Minor),
+                4 => Interval::Third(Major),
+                5 => Interval::Fourth(Perfect),
+                6 => Interval::Fourth(Augmented),
+                7 => Interval::Fifth(Perfect),
+                8 => Interval::Fifth(Augmented),
+                9 => Interval::Sixth(Major),
+                10 => Interval::Seventh(Minor),
+                11 => Interval::Seventh(Major),
                 _ => panic!("{:?} not mapped", note)
             }
         }
@@ -105,7 +115,7 @@ impl Scale {
             chord_string.push_str(c);
         }
         else {
-            println!("Chord not mapped");
+            println!("Chord with intervals {:?} not mapped", intervals);
         } 
         chord_string
     }
