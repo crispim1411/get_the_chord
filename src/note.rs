@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt, str::FromStr};
 
 use Symbol::*;
 use Accidental::*;
@@ -76,5 +76,41 @@ impl fmt::Display for Note {
             signal = "#";
         }
         write!(f, "{:?}{}", self.symbol, signal)
+    }
+}
+
+impl FromStr for Note {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Note, Self::Err> {
+
+        let chars: Vec<char> = s
+            .trim_matches(|p: char| !p.is_alphabetic() && p != '#')
+            .chars()
+            .collect();
+
+        let symbol = match chars[0] {
+            'C' => C,
+            'D' => D,
+            'E' => E,
+            'F' => F,
+            'G' => G,
+            'A' => A,
+            'B' => B,
+            _ => return Err(())
+        };
+
+        let accidental = 
+            if let Some(signal) = chars.get(1) {
+                match signal {
+                    'b' => Flat,
+                    '#' => Sharp,
+                    s => panic!("Unknown symbol {}", s)
+                }
+            } else {
+                Normal
+            };
+
+        Ok(Note::new(symbol, accidental))
     }
 }
