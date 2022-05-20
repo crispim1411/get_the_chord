@@ -2,6 +2,7 @@
 Projeto desenvolvido em Rust para obter o acorde resultante dadas suas notas.
 
 ## Utilização
+### Por código
 ```rust
 let notes = vec![
     Note::new(C, Normal),
@@ -16,6 +17,12 @@ println!("Chord: {}", chord);
 ```
 
 >  Chord: Cmaj7
+
+### Por linha de comando
+
+> cargo run -- [C# F G# C]
+>
+> C#maj7
 
 ---
 
