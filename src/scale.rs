@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::process;
 
 use crate::note::Accidental::*;
 use crate::note::Note;
@@ -116,6 +117,7 @@ impl Scale {
         }
         else {
             println!("Chord with intervals {:?} not mapped", intervals);
+            process::exit(1);
         } 
         chord_string
     }
