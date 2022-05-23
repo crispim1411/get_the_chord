@@ -69,4 +69,54 @@ mod tests {
         
         assert_eq!("Bbm7", chord);
     }
+
+    #[test]
+    fn get_inverted_major_chord_test() {
+        // first inversion
+        let notes = vec![
+            Note::new(G, Normal),
+            Note::new(B, Flat),
+            Note::new(E, Flat)
+        ];
+
+        let chord = notes_to_chord(notes);
+        
+        assert_eq!("Eb/G", chord);
+
+        // second inversion
+        let notes = vec![
+            Note::new(B, Flat),
+            Note::new(E, Flat),
+            Note::new(G, Normal)
+        ];
+
+        let chord = notes_to_chord(notes);
+        
+        assert_eq!("Eb/Bb", chord);
+    }
+
+    #[test]
+    fn get_inverted_minor_chord_test() {
+        // first inversion
+        let notes = vec![
+            Note::new(A, Flat),
+            Note::new(C, Normal),
+            Note::new(F, Normal)
+        ];
+
+        let chord = notes_to_chord(notes);
+        
+        assert_eq!("Fm/Ab", chord);
+
+        // second inversion
+        let notes = vec![
+            Note::new(C, Normal),
+            Note::new(F, Normal),
+            Note::new(A, Flat)
+        ];
+
+        let chord = notes_to_chord(notes);
+        
+        assert_eq!("Fm/C", chord);
+    }
 }
