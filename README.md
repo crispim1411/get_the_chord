@@ -20,7 +20,7 @@ println!("Chord: {}", chord);
 
 ### Por linha de comando
 
-> cargo run -- [C# F G# C]
+> cargo run C# F G# C
 >
 > C#maj7
 
@@ -63,17 +63,16 @@ Até o momento foram mapeados os seguintes acordes:
 
 ## Exemplos
 
-| Acordes Maiores | Notas |
-| :------ | ------------ |
-| C | C - E - G |
-| Aaug | A - C - E# |
-| C6 | C - E - G - A |
-| Cmaj7 | C - E - G - B |
-| CaugM7 | C - E - G# - B |
-| Cm(maj7) | C - Eb - G - B |
-| Cdim7 | C - Eb - Gb - Bbb |
-| Csus2 | C - D - G |
-| Csus4 | C - F - G |
-| Ab/Eb | Eb - Ab - C |
-| C#m/E | E - C# - G# |
+| Acordes Maiores | Notas | Intervalos |
+| :------ | ----- | ------------ |
+| C | C - E - G | T - 3M - 5J |
+| Aaug | A - C - E# | T - 3M - 5+ |
+| C6 | C - E - G - A | T - 3M - 5J - 6M |
+| Emaj7 |  E - G# - B - D# | T - 3M - 5J - 7M |
+| GaugM7 | G - B - D# - F# | T- 3M - 5+ - 7M | 
+| Ebm(maj7) | Eb - Gb - Bb - D | T - 3m - 5J - 7M |
+| Asus2 | A - B - E | T - 2M - 5J |
+| F#sus4 | F# - G# C# | T - 4J - 5J |
+| Ab/Eb | Eb - Ab - C | 1 - 4J - 6M |
+| C#m/E | E - C# - G# | 1 - 3M - 6M | 
 
