@@ -1,5 +1,5 @@
 # Get the Chord
-Projeto desenvolvido em Rust para obter o acorde resultante dadas suas notas.
+Projeto desenvolvido em Rust para obter o acorde a partir das notas que o compõem.
 
 ## Utilização
 ### Por código
@@ -54,12 +54,12 @@ Até o momento foram mapeados os seguintes acordes:
 | Segunda suspensa | T - 2M - 5J  |
 | Quarta suspensa | T - 4J - 5J  |
 
-| Acordes Invertidos | Intervalos |
-| :------ | ------------ |
-| Maior 1ª inversão | 1 - 3m - 6m  |
-| Maior 2ª inversão | 1 - 4J - 6M  |
-| Menor 1ª inversão | 1 - 3M - 6M  |
-| Menor 2ª inversão | 1 - 4J - 6m  |
+| Acordes Invertidos | Intervalos | Intervalos reais |
+| :------ | ------------ | ------ |
+| Maior 1ª inversão | 1 - 3m - 6m  | 3M - 5J - T |
+| Maior 2ª inversão | 1 - 4J - 6M  | 5J - T - 3M |
+| Menor 1ª inversão | 1 - 3M - 6M  | 3m - 5J - T |
+| Menor 2ª inversão | 1 - 4J - 6m  | 5J - T - 3m |
 
 ## Exemplos
 
@@ -72,7 +72,7 @@ Até o momento foram mapeados os seguintes acordes:
 | GaugM7 | G - B - D# - F# | T- 3M - 5+ - 7M | 
 | Ebm(maj7) | Eb - Gb - Bb - D | T - 3m - 5J - 7M |
 | Asus2 | A - B - E | T - 2M - 5J |
-| F#sus4 | F# - G# C# | T - 4J - 5J |
+| F#sus4 | F# - G# - C# | T - 4J - 5J |
 | Ab/Eb | Eb - Ab - C | 1 - 4J - 6M |
 | C#m/E | E - C# - G# | 1 - 3M - 6M | 
 
