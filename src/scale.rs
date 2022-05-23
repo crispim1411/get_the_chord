@@ -28,24 +28,44 @@ fn get_chord_shapes() -> HashMap<Vec<Interval>, String> {
     use IntervalType::*;
 
     vec![
+        // acordes maiores
         (vec![Tonic, Third(Major), Fifth(Perfect)], "".to_string()),
-        (vec![Tonic, Third(Minor), Fifth(Perfect)], "m".to_string()),
+        (vec![Tonic, Third(Major), Fifth(Augmented)], "aug".to_string()),
+        (vec![Tonic, Third(Major), Fifth(Perfect), Sixth(Major)], "6".to_string()),
         (vec![Tonic, Third(Major), Fifth(Perfect), Seventh(Major)], "maj7".to_string()),
-        (vec![Tonic, Third(Minor), Fifth(Perfect), Seventh(Minor)], "m7".to_string()),
+        (vec![Tonic, Third(Major), Fifth(Augmented), Seventh(Major)], "augM7".to_string()),
         (vec![Tonic, Third(Major), Fifth(Perfect), Seventh(Minor)], "7".to_string()),
+        (vec![Tonic, Third(Major), Fifth(Augmented), Seventh(Minor)], "aug7".to_string()),
+        // acordes menores
+        (vec![Tonic, Third(Minor), Fifth(Perfect)], "m".to_string()),
+        (vec![Tonic, Third(Minor), Sixth(Major)], "m6".to_string()),
+        (vec![Tonic, Third(Minor), Fifth(Perfect), Sixth(Major)], "m6".to_string()),
+        (vec![Tonic, Third(Minor), Fifth(Perfect), Seventh(Minor)], "m7".to_string()),
+        (vec![Tonic, Third(Minor), Fifth(Perfect), Seventh(Major)], "m(maj7)".to_string()),
+        (vec![Tonic, Third(Minor), Fourth(Augmented), Seventh(Minor)], "m7(b5)".to_string()),
+        (vec![Tonic, Third(Minor), Fourth(Augmented)], "dim".to_string()),
+        (vec![Tonic, Third(Minor), Fourth(Augmented), Sixth(Major)], "dim7".to_string()),
+        // acordes suspensos
+        (vec![Tonic, Second(Major), Fifth(Perfect)], "sus2".to_string()),
+        (vec![Tonic, Fourth(Perfect), Fifth(Perfect)], "sus4".to_string()),
+        // inversoes
+        (vec![Tonic, Third(Minor), Fifth(Augmented)], "major 1st inversion".to_string()),
+        (vec![Tonic, Fourth(Perfect), Sixth(Major)], "major 2st inversion".to_string()),
+        (vec![Tonic, Third(Major), Sixth(Major)], "minor 1st inversion".to_string()),
+        (vec![Tonic, Fourth(Perfect), Fifth(Augmented)], "minor 2st inversion".to_string()),
     ].into_iter().collect()
 }
 
 pub struct Scale {
-    tone: Note, 
+    notes: Vec<Note>, 
     scale: Vec<Note>,
 }
 
 impl Scale {
-    pub fn new(note: Note) -> Self {
+    pub fn new(notes: Vec<Note>) -> Self {
         Scale {
-            tone: note.clone(), 
-            scale: Scale::fill_scale(note) 
+            scale: Scale::fill_scale(notes[0].clone()),
+            notes: notes
         }
     }
 
@@ -108,12 +128,31 @@ impl Scale {
         }
     }
 
+    fn get_inversion_string(&self, c: &str) -> String {
+        match c {
+            "major 1st inversion" => format!("{}/{}", self.notes[2], self.notes[0]),
+            "major 2st inversion" => format!("{}/{}", self.notes[1], self.notes[0]),
+            "minor 1st inversion" => format!("{}m/{}", self.notes[2], self.notes[0]),
+            "minor 2st inversion" => format!("{}m/{}", self.notes[1], self.notes[0]),
+            _ => { 
+                println!("Inversion not mapped.");
+                process::exit(1);
+            }
+        }
+        
+    }
+
     pub fn to_chord(&self, intervals: Vec<Interval>) -> String {  
         let chord_shapes = get_chord_shapes();
 
-        let mut chord_string = self.tone.to_string();
+        let chord_string: String;
         if let Some(c) = chord_shapes.get(&intervals) {
-            chord_string.push_str(c);
+            if c.contains("inversion") {
+                chord_string = self.get_inversion_string(c);
+            } 
+            else {
+                chord_string = format!("{}{}", self.notes[0], c);
+            }
         }
         else {
             println!("Chord with intervals {:?} not mapped", intervals);
