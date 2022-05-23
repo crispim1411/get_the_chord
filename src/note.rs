@@ -52,7 +52,13 @@ impl Note {
     }
     
     pub fn get_sharp_eq(note: Note) -> Note {
-        
+        if note == Note::new(F, Flat) {
+            return Note::new(E, Normal);
+        } 
+        else if note == Note::new(C, Flat) {
+            return Note::new(B, Normal);
+        }
+
         let previous_symbol = match note.symbol {
             C => B,
             D => C,
@@ -111,6 +117,16 @@ impl FromStr for Note {
                 Normal
             };
 
-        Ok(Note::new(symbol, accidental))
+        let mut note = Note::new(symbol, accidental);
+
+        let enarmonics = vec![
+            Note::new(E, Sharp),
+            Note::new(B, Sharp)
+        ];
+        if enarmonics.contains(&note) {
+            note = Note::get_next_note(note);
+        }
+
+        Ok(note)
     }
 }
