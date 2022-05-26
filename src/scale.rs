@@ -75,14 +75,16 @@ impl Scale {
             tonic = Note::get_sharp_eq(tonic);
         }
     
-        let mut note = tonic.clone();
+        let mut cursor = tonic.clone();
         loop {
-            scale.push(note.clone());
-            note = Note::get_next_note(note);
-            if note == tonic {
+            let next_note = Note::get_next_note(&cursor);
+            scale.push(cursor);            
+            cursor = next_note;
+            if cursor == tonic {
                 break;
             }
         }
+        println!("scale: {:?}", scale);
         scale
     }
 
