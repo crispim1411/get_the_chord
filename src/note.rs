@@ -1,3 +1,4 @@
+ 
 use std::{fmt, str::FromStr};
 
 use Symbol::*;
@@ -89,27 +90,35 @@ impl FromStr for Note {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Note, Self::Err> {
-
         let chars: Vec<char> = s
-            .trim_matches(|p: char| !p.is_alphabetic() && p != '#')
+            .to_uppercase()
             .chars()
             .collect();
 
-        let symbol = match chars[0] {
-            'C' => C,
-            'D' => D,
-            'E' => E,
-            'F' => F,
-            'G' => G,
-            'A' => A,
-            'B' => B,
-            _ => return Err("Expected a music symbol.".to_string())
-        };
+        if chars.len() > 2 {
+            return Err(format!("Invalid symbol `{}`", s));
+        }
+
+        let symbol = 
+            if let Some(s) = chars.get(0) {
+                match s {
+                    'C' => C,
+                    'D' => D,
+                    'E' => E,
+                    'F' => F,
+                    'G' => G,
+                    'A' => A,
+                    'B' => B,
+                    _ => return Err("Expected a music symbol".to_string())
+                }
+            } else {
+                return Err(format!("Invalid symbol `{}`", s));
+            };
 
         let accidental = 
             if let Some(signal) = chars.get(1) {
                 match signal {
-                    'b' => Flat,
+                    'B' => Flat,
                     '#' => Sharp,
                     s => return Err(format!("Invalid symbol `{}`", s))
                 }

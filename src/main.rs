@@ -8,7 +8,7 @@ use get_the_chord::notes_to_chord;
 fn main() {
     let args = env::args(); 
 
-    match run(args) {
+    match get_chord(args) {
         Ok(chord) => println!("Chord: {}", chord),
         Err(error) => println!("ERROR: {}", error)
     }
@@ -22,7 +22,7 @@ fn read_args(args: Args) -> Result<Vec<Note>, String> {
     .collect()
 }
 
-fn run(args: Args) -> Result<String, String> {
+fn get_chord(args: Args) -> Result<String, String> {
     let notes = read_args(args)?;
     let chord = notes_to_chord(notes)?;
     Ok(chord)
