@@ -84,7 +84,6 @@ impl Scale {
                 break;
             }
         }
-        println!("scale: {:?}", scale);
         scale
     }
 
