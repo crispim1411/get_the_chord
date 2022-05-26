@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::process;
 
 use crate::note::Accidental::*;
 use crate::note::Note;
@@ -87,7 +86,7 @@ impl Scale {
         scale
     }
 
-    pub fn get_intervals(&self, mut notes: Vec<Note>) -> Vec<Interval> {
+    pub fn get_intervals(&self, mut notes: Vec<Note>) -> Result<Vec<Interval>, String> {
 
         let mut intervals = vec![];
 
@@ -96,18 +95,18 @@ impl Scale {
                 note = Note::get_sharp_eq(note.clone());
             }
         
-            let interval = self.map_to_interval(note);
+            let interval = self.map_to_interval(note)?;
             intervals.push(interval);
         }
         intervals.sort();
-        intervals
+        Ok(intervals)
     }
 
-    fn map_to_interval(&self, note: Note) -> Interval {
+    fn map_to_interval(&self, note: Note) -> Result<Interval, String> {
         use IntervalType::*;
 
         if let Some(p) = self.scale.iter().position(|i| i == &note) {
-            match p {
+            let interval = match p {
                 0 => Interval::Tonic,
                 1 => Interval::Second(Minor),
                 2 => Interval::Second(Major),
@@ -120,45 +119,44 @@ impl Scale {
                 9 => Interval::Sixth(Major),
                 10 => Interval::Seventh(Minor),
                 11 => Interval::Seventh(Major),
-                _ => panic!("{:?} not mapped", note)
-            }
+                _ => return Err(format!("{:?} not mapped", note))
+            };
+            Ok(interval)
         }
         else {
-            panic!("{:?} not on scale", note);
+            return Err(format!("{:?} not on scale", note));
         }
     }
 
-    fn get_inversion_string(&self, c: &str) -> String {
-        match c {
+    fn get_inversion_string(&self, c: &str) -> Result<String, String> {
+        let chord = match c {
             "major 1st inversion" => format!("{}/{}", self.notes[2], self.notes[0]),
             "major 2st inversion" => format!("{}/{}", self.notes[1], self.notes[0]),
             "minor 1st inversion" => format!("{}m/{}", self.notes[2], self.notes[0]),
             "minor 2st inversion" => format!("{}m/{}", self.notes[1], self.notes[0]),
-            _ => { 
-                println!("Inversion not mapped.");
-                process::exit(1);
-            }
-        }
-        
+            _ => return Err("Inversion not mapped.".to_string())
+        };
+        Ok(chord)
     }
 
-    pub fn to_chord(&self, intervals: Vec<Interval>) -> String {  
+    pub fn to_chord(&self, intervals: Vec<Interval>) -> Result<String, String> {  
         let chord_shapes = get_chord_shapes();
 
         let chord_string: String;
         if let Some(c) = chord_shapes.get(&intervals) {
             if c.contains("inversion") {
-                chord_string = self.get_inversion_string(c);
+                chord_string = self.get_inversion_string(c)?;
             } 
             else {
                 chord_string = format!("{}{}", self.notes[0], c);
             }
         }
         else {
-            println!("Chord with intervals {:?} not mapped", intervals);
-            process::exit(1);
+            return Err(
+                format!("Chord with intervals {:?} not mapped", intervals)
+            );
         } 
-        chord_string
+        Ok(chord_string)
     }
     
 }

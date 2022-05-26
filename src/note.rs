@@ -86,7 +86,7 @@ impl fmt::Display for Note {
 }
 
 impl FromStr for Note {
-    type Err = ();
+    type Err = String;
 
     fn from_str(s: &str) -> Result<Note, Self::Err> {
 
@@ -103,7 +103,7 @@ impl FromStr for Note {
             'G' => G,
             'A' => A,
             'B' => B,
-            _ => return Err(())
+            _ => return Err("Expected a music symbol.".to_string())
         };
 
         let accidental = 
@@ -111,7 +111,7 @@ impl FromStr for Note {
                 match signal {
                     'b' => Flat,
                     '#' => Sharp,
-                    s => panic!("Unknown symbol {}", s)
+                    s => return Err(format!("Invalid symbol `{}`", s))
                 }
             } else {
                 Normal

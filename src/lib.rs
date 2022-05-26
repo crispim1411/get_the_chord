@@ -4,11 +4,11 @@ use scale::Scale;
 pub mod note;
 pub mod scale;
 
-pub fn notes_to_chord(notes: Vec<Note>) -> String {
+pub fn notes_to_chord(notes: Vec<Note>) -> Result<String, String> {
     let scale = Scale::new(notes.clone());
-    let intervals = scale.get_intervals(notes);
-    
-    scale.to_chord(intervals)
+    let intervals = scale.get_intervals(notes)?;
+    let chord = scale.to_chord(intervals)?;
+    Ok(chord)
 }
 
 #[cfg(test)]
@@ -26,7 +26,7 @@ mod tests {
 
         let chord = notes_to_chord(notes);
         
-        assert_eq!("G#", chord);
+        assert_eq!("G#", chord.unwrap());
     }
 
     #[test]
@@ -39,7 +39,7 @@ mod tests {
 
         let chord = notes_to_chord(notes);
         
-        assert_eq!("Ebm", chord);
+        assert_eq!("Ebm", chord.unwrap());
     }
 
     #[test]
@@ -53,7 +53,7 @@ mod tests {
 
         let chord = notes_to_chord(notes);
         
-        assert_eq!("A#maj7", chord);
+        assert_eq!("A#maj7", chord.unwrap());
     }
 
     #[test]
@@ -67,7 +67,7 @@ mod tests {
 
         let chord = notes_to_chord(notes);
         
-        assert_eq!("Bbm7", chord);
+        assert_eq!("Bbm7", chord.unwrap());
     }
 
     #[test]
@@ -81,7 +81,7 @@ mod tests {
 
         let chord = notes_to_chord(notes);
         
-        assert_eq!("Eb/G", chord);
+        assert_eq!("Eb/G", chord.unwrap());
 
         // second inversion
         let notes = vec![
@@ -92,7 +92,7 @@ mod tests {
 
         let chord = notes_to_chord(notes);
         
-        assert_eq!("Eb/Bb", chord);
+        assert_eq!("Eb/Bb", chord.unwrap());
     }
 
     #[test]
@@ -106,7 +106,7 @@ mod tests {
 
         let chord = notes_to_chord(notes);
         
-        assert_eq!("Fm/Ab", chord);
+        assert_eq!("Fm/Ab", chord.unwrap());
 
         // second inversion
         let notes = vec![
@@ -117,6 +117,6 @@ mod tests {
 
         let chord = notes_to_chord(notes);
         
-        assert_eq!("Fm/C", chord);
+        assert_eq!("Fm/C", chord.unwrap());
     }
 }
