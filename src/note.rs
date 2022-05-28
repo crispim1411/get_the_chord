@@ -4,6 +4,8 @@ use std::{fmt, str::FromStr};
 use Symbol::*;
 use Accidental::*;
 
+use crate::CustomError;
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Symbol {
     C,
@@ -52,11 +54,11 @@ impl Note {
         }
     }
     
-    pub fn get_sharp_eq(note: Note) -> Note {
-        if note == Note::new(F, Flat) {
+    pub fn get_sharp_eq(note: &Note) -> Note {
+        if note == &Note::new(F, Flat) {
             return Note::new(E, Normal);
         } 
-        else if note == Note::new(C, Flat) {
+        else if note == &Note::new(C, Flat) {
             return Note::new(B, Normal);
         }
 
@@ -87,21 +89,21 @@ impl fmt::Display for Note {
 }
 
 impl FromStr for Note {
-    type Err = String;
+    type Err = CustomError;
 
-    fn from_str(s: &str) -> Result<Note, Self::Err> {
-        let chars: Vec<char> = s
+    fn from_str(text: &str) -> Result<Note, Self::Err> {
+        let chars: Vec<char> = text
             .to_uppercase()
             .chars()
             .collect();
 
         if chars.len() > 2 {
-            return Err(format!("Invalid symbol `{}`", s));
+            return Err(CustomError::ParseNoteError);
         }
 
         let symbol = 
-            if let Some(s) = chars.get(0) {
-                match s {
+            if let Some(note) = chars.get(0) {
+                match note {
                     'C' => C,
                     'D' => D,
                     'E' => E,
@@ -109,10 +111,10 @@ impl FromStr for Note {
                     'G' => G,
                     'A' => A,
                     'B' => B,
-                    _ => return Err("Expected a music symbol".to_string())
+                    _ => return Err(CustomError::ParseNoteError)
                 }
             } else {
-                return Err(format!("Invalid symbol `{}`", s));
+                return Err(CustomError::ParseNoteError);
             };
 
         let accidental = 
@@ -120,7 +122,7 @@ impl FromStr for Note {
                 match signal {
                     'B' => Flat,
                     '#' => Sharp,
-                    s => return Err(format!("Invalid symbol `{}`", s))
+                    _ => return Err(CustomError::ParseNoteError)
                 }
             } else {
                 Normal

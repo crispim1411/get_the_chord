@@ -1,7 +1,9 @@
 use std::collections::HashMap;
 
+use crate::Chord;
 use crate::note::Accidental::*;
 use crate::note::Note;
+use crate::CustomError;
 
 #[derive(Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum IntervalType {
@@ -22,7 +24,7 @@ pub enum Interval {
     Seventh(IntervalType),
 }
 
-fn get_chord_shapes() -> HashMap<Vec<Interval>, String> {
+fn get_chord_shapes() -> HashMap<Vec<Interval>, Chord> {
     use Interval::*;
     use IntervalType::*;
 
@@ -61,19 +63,21 @@ pub struct Scale {
 }
 
 impl Scale {
-    pub fn new(notes: Vec<Note>) -> Self {
+    pub fn new() -> Self {
         Scale {
-            scale: Scale::fill_scale(notes[0].clone()),
-            notes: notes
+            scale: vec![],
+            notes: vec![]
         }
     }
 
-    pub fn fill_scale(mut tonic: Note) -> Vec<Note> {
+    pub fn fill_scale(&mut self, notes: Vec<Note>) {
+        let tonic = notes[0].clone();
         let mut scale = vec![];
     
-        if tonic.accidental == Flat {
-            tonic = Note::get_sharp_eq(tonic);
-        }
+        let tonic = 
+            if tonic.accidental == Flat {
+                Note::get_sharp_eq(&tonic)
+            } else { tonic };
     
         let mut cursor = tonic.clone();
         loop {
@@ -84,29 +88,30 @@ impl Scale {
                 break;
             }
         }
-        scale
+        self.notes = notes;
+        self.scale = scale;
     }
 
-    pub fn get_intervals(&self, mut notes: Vec<Note>) -> Result<Vec<Interval>, String> {
-
+    pub fn get_intervals(&self) -> Result<Vec<Interval>, CustomError> {
+        let mut notes = self.notes.clone();
         let mut intervals = vec![];
 
         while let Some(mut note) = notes.pop() {
             if note.accidental == Flat {
-                note = Note::get_sharp_eq(note.clone());
+                note = Note::get_sharp_eq(&note);
             }
         
-            let interval = self.map_to_interval(note)?;
+            let interval = self.map_to_interval(&note)?;
             intervals.push(interval);
         }
         intervals.sort();
         Ok(intervals)
     }
 
-    fn map_to_interval(&self, note: Note) -> Result<Interval, String> {
+    fn map_to_interval(&self, note: &Note) -> Result<Interval, CustomError> {
         use IntervalType::*;
 
-        if let Some(p) = self.scale.iter().position(|i| i == &note) {
+        if let Some(p) = self.scale.iter().position(|i| i == note) {
             let interval = match p {
                 0 => Interval::Tonic,
                 1 => Interval::Second(Minor),
@@ -120,27 +125,27 @@ impl Scale {
                 9 => Interval::Sixth(Major),
                 10 => Interval::Seventh(Minor),
                 11 => Interval::Seventh(Major),
-                _ => return Err(format!("{:?} not mapped", note))
+                _ => return Err(CustomError::MapIntervalError)
             };
             Ok(interval)
         }
         else {
-            return Err(format!("{:?} not on scale", note));
+            return Err(CustomError::MapIntervalError);
         }
     }
 
-    fn get_inversion_string(&self, c: &str) -> Result<String, String> {
+    fn get_inversion_string(&self, c: &str) -> Result<Chord, CustomError> {
         let chord = match c {
             "major 1st inversion" => format!("{}/{}", self.notes[2], self.notes[0]),
             "major 2st inversion" => format!("{}/{}", self.notes[1], self.notes[0]),
             "minor 1st inversion" => format!("{}m/{}", self.notes[2], self.notes[0]),
             "minor 2st inversion" => format!("{}m/{}", self.notes[1], self.notes[0]),
-            _ => return Err("Inversion not mapped.".to_string())
+            _ => return Err(CustomError::MapInversionError)
         };
         Ok(chord)
     }
 
-    pub fn to_chord(&self, intervals: Vec<Interval>) -> Result<String, String> {  
+    pub fn to_chord(&self, intervals: Vec<Interval>) -> Result<Chord, CustomError> {  
         let chord_shapes = get_chord_shapes();
 
         let chord_string: String;
@@ -153,9 +158,7 @@ impl Scale {
             }
         }
         else {
-            return Err(
-                format!("Chord with intervals {:?} not mapped", intervals)
-            );
+            return Err(CustomError::MapChordError(intervals));
         } 
         Ok(chord_string)
     }

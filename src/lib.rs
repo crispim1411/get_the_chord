@@ -1,13 +1,35 @@
+use std::env::Args;
+use std::str::FromStr;
+
+use error::CustomError;
 use note::Note;
 use scale::Scale;
 
 pub mod note;
 pub mod scale;
+mod error;
 
-pub fn notes_to_chord(notes: Vec<Note>) -> Result<String, String> {
-    let scale = Scale::new(notes.clone());
-    let intervals = scale.get_intervals(notes)?;
+type Chord = String;
+
+fn read_args(args: Args) -> Result<Vec<Note>, CustomError> {
+    args
+    .skip(1) // skip filename 
+    .into_iter()
+    .map(|i| Note::from_str(&i))
+    .collect()
+}
+
+fn notes_to_chord(notes: Vec<Note>) -> Result<Chord, CustomError> {
+    let mut scale = Scale::new();
+    scale.fill_scale(notes);
+    let intervals = scale.get_intervals()?;
     let chord = scale.to_chord(intervals)?;
+    Ok(chord)
+}
+
+pub fn get_chord(args: Args) -> Result<Chord, CustomError> {
+    let notes = read_args(args)?;
+    let chord = notes_to_chord(notes)?;
     Ok(chord)
 }
 
@@ -118,5 +140,16 @@ mod tests {
         let chord = notes_to_chord(notes);
         
         assert_eq!("Fm/C", chord.unwrap());
+    }
+
+    #[test]
+    fn parse_note_error_test() {
+        let arg = "2";
+        let result = Note::from_str(arg);
+        let error = match result {
+            Err(CustomError::ParseNoteError) => true,
+            _ => false
+        };
+        assert!(error);
     }
 }
