@@ -11,7 +11,7 @@ let notes = vec![
     Note::new(B, Flat),
 ];
 
-let chord = notes_to_chord(notes);
+let chord = notes_to_chord(notes).unwrap();
 
 println!("Chord: {}", chord);
 ```
