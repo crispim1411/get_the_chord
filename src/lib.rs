@@ -5,8 +5,8 @@ use error::CustomError;
 use note::Note;
 use scale::Scale;
 
-pub mod note;
-pub mod scale;
+mod note;
+mod scale;
 mod error;
 
 type Chord = String;
