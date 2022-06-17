@@ -63,16 +63,16 @@ Até o momento foram mapeados os seguintes acordes:
 
 ## Exemplos
 
-| Acordes Maiores | Notas | Intervalos |
-| :------ | ----- | ------------ |
-| C | C - E - G | T - 3M - 5J |
-| Aaug | A - C - E# | T - 3M - 5+ |
-| C6 | C - E - G - A | T - 3M - 5J - 6M |
-| Emaj7 |  E - G# - B - D# | T - 3M - 5J - 7M |
-| GaugM7 | G - B - D# - F# | T- 3M - 5+ - 7M | 
-| Ebm(maj7) | Eb - Gb - Bb - D | T - 3m - 5J - 7M |
-| Asus2 | A - B - E | T - 2M - 5J |
-| F#sus4 | F# - G# - C# | T - 4J - 5J |
-| Ab/Eb | Eb - Ab - C | 1 - 4J - 6M |
-| C#m/E | E - C# - G# | 1 - 3M - 6M | 
+| Notas | Intervalos Mapeados | Acorde | 
+| ----- | ------------  | :------  |
+| C - E - G | T - 3M - 5J | C  |
+| A - C - E# | T - 3M - 5+ | Aaug |
+| C - E - G - A | T - 3M - 5J - 6M | C6  |
+|  E - G# - B - D# | T - 3M - 5J - 7M | Emaj7 |
+| G - B - D# - F# | T- 3M - 5+ - 7M | GaugM7  | 
+| Eb - Gb - Bb - D | T - 3m - 5J - 7M | Ebm(maj7) |
+| A - B - E | T - 2M - 5J | Asus2 |
+| F# - G# - C# | T - 4J - 5J | F#sus4 |
+| Eb - Ab - C | 1 - 4J - 6M | Ab/Eb |
+| E - C# - G# | 1 - 3M - 6M | C#m/E | 
 
