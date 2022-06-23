@@ -36,7 +36,7 @@ Até o momento foram mapeados os seguintes acordes:
 | Maior com sexta | T - 3M - 5J - 6M |
 | Maior com sétima    | T - 3M - 5J - 7M |
 | Dominante | T - 3M - 5J - 7m |
-| Dominante com quinta aumentada | T - 3M - 5+- 7m |
+| Dominante com quinta aumentada | T - 3M - 5+ - 7m |
 | Maior com sétima e quinta aumentada | T - 3M - 5+ - 7M |
 
 | Acordes Menores | Intervalos |
@@ -44,7 +44,7 @@ Até o momento foram mapeados os seguintes acordes:
 | Menor | T - 3m - 5J  |
 | Menor com sexta | T - 3m - 5J - 6M |
 | Menor com sétima | T - 3m - 5J - 7m |
-| Menor com sétima maior | T - 3m - 5J - 7m |
+| Menor com sétima maior | T - 3m - 5J - 7M |
 | Meio diminuto | T - 3m - 5d - 7m |
 | Diminuto | T - 3m - 5d  |
 | Diminuto com sétima | T - 3m - 5d - 7d |
